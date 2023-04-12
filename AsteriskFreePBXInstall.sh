@@ -7,7 +7,7 @@ cd /usr/src/
 curl -O http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz
 tar xvf asterisk-18-current.tar.gz
 cd asterisk-18*/
-contrib/scripts/install_prereq install
+contrib/scripts/install_prereq -y install
 ./configure
 make menuselect.makeopts
 ENABLE_CATEGORIES="MENUSELECT_ADDONS"
@@ -52,7 +52,7 @@ make install
 make samples
 make config
 ldconfig
-cd
+cd /root/
 groupadd asterisk
 useradd -r -d /var/lib/asterisk -g asterisk asterisk
 usermod -aG audio,dialout asterisk
@@ -72,7 +72,7 @@ sed -i 's/^\(User\|Group\).*/\1 asterisk/' /etc/apache2/apache2.conf
 sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 rm -f /var/www/html/index.html
 unlink /etc/apache2/sites-enabled/000-default.conf
-apt-get update
+apt-get -y update
 apt -y install software-properties-common
 add-apt-repository -y ppa:ondrej/php
 apt-get -y update
@@ -81,7 +81,7 @@ apt-get install -y php7.4-cli php7.4-json php7.4-common php7.4-mysql php7.4-zip 
 sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/apache2/php.ini
 sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/cli/php.ini
 sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/7.4/apache2/php.ini
-cd ~/
+cd /root/
 wget http://mirror.freepbx.org/modules/packages/freepbx/7.4/freepbx-16.0-latest.tgz
 tar xfz freepbx-16.0-latest.tgz
 rm -f freepbx-16.0-latest.tgz
@@ -106,8 +106,8 @@ ufw allow https
 apt update
 apt install fail2ban
 systemctl status fail2ban.service
-#helps if you configure the jail defaults before copying over dipshit
 cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+sed -i 's/\/var\/log\/asterisk\/messages/\/var\/log\/asterisk\/full/g' /etc/fail2ban/jail.local
 systemctl enable fail2ban
 systemctl start fail2ban
 ufw status
