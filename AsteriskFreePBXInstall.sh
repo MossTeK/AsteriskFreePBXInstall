@@ -111,37 +111,3 @@ cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 systemctl enable fail2ban
 systemctl start fail2ban
 ufw status
-====
-check that ufw running and allowing 5060 50601 22
-====
-
-cloudflared
-
-====
-curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && 
-
- dpkg -i cloudflared.deb && 
-
- cloudflared service install 
-
-====
-
-apt install certbot python3-certbot-apache
-vim /etc/apache2/sites-available/voip.archbtw.conf
-ServerName archbtw.net
-ServerAlias sip.archbtw.net
-apache2ctl configtest
-systemctl reload apache2
-ufw allow 'Apache Full'
-ufw delete allow 'Apache'
-certbot --apache
-
-==
-<VirtualHost *:80>
-    ServerName yourDomainName.com
-    DocumentRoot /var/www/html
-    ServerAlias www.yourDomainName.com
-    ErrorLog /var/www/error.log
-    CustomLog /var/www/requests.log combined
-</VirtualHost>
-==
