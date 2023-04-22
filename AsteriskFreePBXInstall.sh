@@ -1,12 +1,13 @@
 #!/usr/bin/bash
 #this script is to install and configure Asterisk18 + FreePBX
-set -x
-trap read debug
+
 #check to see if the user is the root user
 if [ "$(id -u)" -ne 0 ]; then
   echo "This script must be run as root. Exiting..."
   exit 1
 fi
+
+commands=(
 
 #install dependencies and upgrade
 add-apt-repository -y ppa:ondrej/php ppa:universe 
@@ -128,3 +129,9 @@ cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 sed -i 's/\/var\/log\/asterisk\/messages/\/var\/log\/asterisk\/full/g' /etc/fail2ban/jail.local
 systemctl enable fail2ban 
 systemctl start fail2ban 
+)
+
+for cmd in "${commands[@]}"; do
+    echo "Running command: $cmd"
+    eval "$cmd"
+done
