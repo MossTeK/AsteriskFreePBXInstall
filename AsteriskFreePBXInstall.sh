@@ -7,15 +7,14 @@ apt update -y
 sudo apt install -y libedit-dev nodejs npm libapache2-mod-php7.4 php7.4 php7.4-{mysql,cli,common,imap,ldap,xml,fpm,curl,mbstring,zip,gd,gettext,xml,json,snmp} lsb-release ca-certificates apt-transport-https software-properties-common gnupg2 git curl wget libnewt-dev libssl-dev libncurses5-dev subversion libsqlite3-dev build-essential libjansson-dev libxml2-dev  uuid-dev mariadb-server apache2
 apt upgrade -y 
 
-#download and estract asterisk archive
-cd /usr/src/ 
+#download and estract asterisk archive 
 curl -O http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz 
-tar xvf asterisk-18-current.tar.gz 
+cp asterisk-18-current.tar.gz /usr/src/asterisk-18-current.tar.gz 
+tar -xvf asterisk-18-current.tar.gz 
 
-#Default config for asterisk
-cd asterisk-18*/ 
-contrib/scripts/install_prereq -y install 
-./configure 
+#Default config for asterisk 
+/usr/src/asterisk-18*/contrib/scripts/install_prereq -y install 
+/usr/src/asterisk-18*/configure 
 
 #specifying make options
 make menuselect.makeopts
@@ -66,7 +65,6 @@ make config
 ldconfig 
 
 #add asterisk user
-cd /root/ 
 groupadd asterisk 
 useradd -r -d /var/lib/asterisk -g asterisk asterisk 
 usermod -aG audio,dialout asterisk
@@ -95,14 +93,12 @@ sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/cli/php.ini
 sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/7.4/apache2/php.ini 
 
 #download FreePBX 16 archive
-cd /root/ 
-wget http://mirror.freepbx.org/modules/packages/freepbx/7.4/freepbx-16.0-latest.tgz 
-tar xfz freepbx-16.0-latest.tgz 
-rm -f freepbx-16.0-latest.tgz 
-cd freepbx 
+wget http://mirror.freepbx.org/modules/packages/freepbx/7.4/freepbx-16.0-latest.tgz -P /root/
+tar -xfz /root/freepbx-16.0-latest.tgz 
+rm -f /root/freepbx-16.0-latest.tgz 
 systemctl stop asterisk 
-./start_asterisk start 
-./install -n 
+/root/freepbx/start_asterisk start 
+/root/freepbx/install -n 
 fwconsole ma disablerepo commercial 
 fwconsole ma installall 
 fwconsole ma delete firewall 
