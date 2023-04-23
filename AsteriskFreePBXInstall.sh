@@ -1,18 +1,10 @@
 #!/usr/bin/bash
-#this script is to install and configure Asterisk18 + FreePBX
-
-#check to see if the user is the root user
-if [ "$(id -u)" -ne 0 ]; then
-  echo "This script must be run as root. Exiting..."
-  exit 1
-fi
-
-commands=(
 
 #install dependencies and upgrade
-add-apt-repository -y ppa:ondrej/php ppa:universe 
+add-apt-repository -y ppa:ondrej/php 
+add-apt-repository -y universe 
 apt update -y 
-apt install -y 'git curl wget libnewt-dev libssl-dev libncurses5-dev subversion libsqlite3-dev build-essential libjansson-dev libxml2-dev uuid-dev software-properties-common php7.4 subversion apache2 mariadb-server php7.4-cli php7.4-json php7.4-common php7.4-mysql php7.4-zip php7.4-gdphp7.4-mbstring php7.4-curl php7.4-xml php7.4-bcmath nodejs npm subversion' 
+sudo apt install -y libedit-dev nodejs npm libapache2-mod-php7.4 php7.4 php7.4-{mysql,cli,common,imap,ldap,xml,fpm,curl,mbstring,zip,gd,gettext,xml,json,snmp} lsb-release ca-certificates apt-transport-https software-properties-common gnupg2 git curl wget libnewt-dev libssl-dev libncurses5-dev subversion libsqlite3-dev build-essential libjansson-dev libxml2-dev  uuid-dev mariadb-server apache2
 apt upgrade -y 
 
 #download and estract asterisk archive
@@ -26,15 +18,17 @@ contrib/scripts/install_prereq -y install
 ./configure 
 
 #specifying make options
-make menuselect.makeopts 
+make menuselect.makeopts
 ENABLE_CATEGORIES="MENUSELECT_ADDONS"
 for cat in $ENABLE_CATEGORIES ; do
 menuselect/menuselect --enable-category $cat menuselect.makeopts
 done
+
 DISABLE_CATEGORIES="MENUSELECT_CORE_SOUNDS MENUSELECT_EXTRA_SOUNDS MENUSELECT_MOH"
 for cat in $DISABLE_CATEGORIES ; do
 menuselect/menuselect --disable-category $cat menuselect.makeopts
 done
+
 ENABLE_OPTIONS=""
 ENABLE_OPTIONS+=" app_adsiprog app_alarmreceiver app_amd app_attended_transfer app_blind_transfer"
 ENABLE_OPTIONS+=" app_chanisavail app_dictate app_externalivr app_festival app_getcpeid app_ices"
@@ -59,12 +53,17 @@ ENABLE_OPTIONS+=" BETTER_BACKTRACES"
 for option in $ENABLE_OPTIONS ; do
 menuselect/menuselect --enable $option menuselect.makeopts
 done
+
 DISABLE_OPTIONS=""
 DISABLE_OPTIONS+=" BUILD_NATIVE"
 for option in $DISABLE_OPTIONS ; do
 menuselect/menuselect --disable $option menuselect.makeopts
 done
-make  make install  make samples  make config  ldconfig 
+make
+make install
+make samples
+make config
+ldconfig 
 
 #add asterisk user
 cd /root/ 
@@ -115,12 +114,12 @@ a2enmod rewrite
 systemctl restart apache2 
 
 #enable isp ssh http https and ssh
-ufw enable 
-ufw allow 5060
-ufw allow 5061
-ufw allow ssh
-ufw allow http
-ufw allow https
+ufw -y enable 
+ufw -y allow 5060
+ufw -y allow 5061
+ufw -y allow ssh
+ufw -y allow http
+ufw -y allow https
 apt -y update
 
 #install and configure fail2ban
@@ -129,9 +128,3 @@ cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 sed -i 's/\/var\/log\/asterisk\/messages/\/var\/log\/asterisk\/full/g' /etc/fail2ban/jail.local
 systemctl enable fail2ban 
 systemctl start fail2ban 
-)
-
-for cmd in "${commands[@]}"; do
-    echo "Running command: $cmd"
-    eval "$cmd"
-done
