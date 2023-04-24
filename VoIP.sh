@@ -57,8 +57,7 @@ sudo sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/7.4/apache2/php.ini
 cd /usr/src/
 sudo wget http://mirror.freepbx.org/modules/packages/freepbx/7.4/freepbx-16.0-latest.tgz
 sudo tar xzf ./freepbx-16.0-latest.tgz 
-sudo rm -f ./freepbx-16.0-latest.tgz 
-cd freepbx
+cd /usr/src/freepbx/
 sudo systemctl stop asterisk 
 sudo ./start_asterisk start 
 sudo ./install -n 
