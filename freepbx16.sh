@@ -3,12 +3,12 @@
 #download FreePBX 16 archive
 cd /usr/src/
 sudo wget http://mirror.freepbx.org/modules/packages/freepbx/7.4/freepbx-16.0-latest.tgz
-sudo tar -xfz /usr/src/freepbx-16.0-latest.tgz 
-sudo rm -f /usr/src/freepbx-16.0-latest.tgz 
+sudo tar xzf ./freepbx-16.0-latest.tgz 
+sudo rm -f ./freepbx-16.0-latest.tgz 
 cd freepbx
 sudo systemctl stop asterisk 
 sudo ./start_asterisk start 
-sudo ./freepbx/install -n 
+sudo ./install -n 
 sudo fwconsole ma disablerepo commercial 
 sudo fwconsole ma installall 
 sudo fwconsole ma delete firewall 
