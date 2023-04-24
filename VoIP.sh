@@ -71,7 +71,7 @@ sudo fwconsole restart
 sudo a2enmod rewrite 
 sudo systemctl restart apache2 
 
-#enable isp ssh http https and ssh
+#open ports for ssh http https and SIP
 sudo ufw enable 
 sudo ufw allow 5060
 sudo ufw allow 5061
