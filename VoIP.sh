@@ -43,6 +43,8 @@ sudo sed '/rungroup = asterisk ; The group to run as./s/^#//' -i /etc/asterisk/a
 sudo systemctl restart asterisk 
 sudo systemctl enable asterisk 
 
+wait
+
 #configure apache config and store default
 sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf_orig 
 sudo sed -i 's/^\(User\|Group\).*/\1 asterisk/' /etc/apache2/apache2.conf 
