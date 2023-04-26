@@ -40,10 +40,8 @@ sudo sed '/runuser = asterisk ; The user to run as./s/^#//' -i /etc/asterisk/ast
 sudo sed '/rungroup = asterisk ; The group to run as./s/^#//' -i /etc/asterisk/asterisk.conf 
 
 #restart asterisk daemon
-sudo systemctl restart asterisk 
 sudo systemctl enable asterisk 
-
-wait
+sudo systemctl start asterisk
 
 #configure apache config and store default
 sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf_orig 
@@ -60,7 +58,6 @@ cd /usr/src/
 sudo wget http://mirror.freepbx.org/modules/packages/freepbx/7.4/freepbx-16.0-latest.tgz
 sudo tar xzf ./freepbx-16.0-latest.tgz 
 cd /usr/src/freepbx/
-sudo systemctl stop asterisk 
 sudo ./start_asterisk start 
 sudo ./install -n 
 sudo fwconsole ma disablerepo commercial 
