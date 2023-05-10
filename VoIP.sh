@@ -7,7 +7,7 @@ sudo apt update -y
 sudo apt install -y libedit-dev nodejs npm libapache2-mod-php7.4 php7.4 php7.4-{mysql,cli,common,imap,ldap,xml,fpm,curl,mbstring,zip,gd,gettext,xml,json,snmp} lsb-release ca-certificates apt-transport-https software-properties-common gnupg2 git curl wget libnewt-dev libssl-dev libncurses5-dev subversion libsqlite3-dev build-essential libjansson-dev libxml2-dev  uuid-dev mariadb-server apache2
 sudo apt upgrade -y 
 
-#download and estract asterisk archive 
+#download and extract asterisk archive 
 cd /usr/src/
 sudo curl -O http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz 
 sudo tar -xvf asterisk-18-current.tar.gz
