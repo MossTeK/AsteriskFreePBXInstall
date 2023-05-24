@@ -72,11 +72,13 @@ sudo systemctl restart apache2
 
 #open ports for ssh http https and SIP
 sudo ufw enable 
+sudo ufw allow 16384:32767
 sudo ufw allow 5060
 sudo ufw allow 5061
 sudo ufw allow ssh
 sudo ufw allow http
 sudo ufw allow https
+sudo ufw allow smtp
 sudo apt update
 
 #install and configure fail2ban
